@@ -1,0 +1,6 @@
+<h4>Edit {{ address.raw_address }}</h4>
+<form action="/edit_address/{{ address.id }}" method="post">
+    {% csrf_token %}
+    <input type="text" name="address" value="{{ address.raw_address }}">
+    <input type="submit" value="edit_address">
+</form>

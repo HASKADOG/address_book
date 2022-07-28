@@ -1,0 +1,38 @@
+version: "3"
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=address_keeper
+      - POSTGRES_USER=address_master
+      - POSTGRES_PASSWORD=changeme_123
+    restart: always
+    ports:
+      - "5432:5432"
+
+  address_keeper_d:
+    build:
+      context: .
+      dockerfile: address_keeper_d/Dockerfile
+    volumes:
+      - .:/code
+    restart: always
+    environment:
+      - POSTGRES_NAME=address_keeper
+      - POSTGRES_USER=address_master
+      - POSTGRES_PASSWORD=changeme_123
+    ports:
+      - "8000:8000"
+    links:
+      - postgres:postgres
+    depends_on:
+      - postgres
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - address_keeper_d

@@ -1,0 +1,31 @@
+<h2>Address keeper | logged in as {{ user.username }} | <a href="/logout">Logout</a></h2>
+
+
+<hr>
+
+<h4>Add an address</h4>
+<form action="/add_address" method="post">
+    {% csrf_token %}
+    <input type="text" name="address">
+    <input type="submit" value="add_address">
+</form>
+
+<hr>
+
+{% for address in addresses %}
+    <p>{{ address.raw_address }} | {{ address.address}} </p>
+    <iframe
+            width="450"
+            height="250"
+            frameborder="0" style="border:0"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed/v1/place?key={{ api_key }}&q={{ address.query_address }}"
+            allowfullscreen>
+    </iframe>
+    <form action="/delete_address" method="post">
+        {% csrf_token %}
+        <input style="display: none;" type="number" name="address_id" value="{{ address.id }}">
+        <input type="submit" value="Delete address">
+    </form>
+    <button><a href="/edit_address/{{ address.id }}">edit address</a></button>
+{% endfor %}

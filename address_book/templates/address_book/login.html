@@ -1,0 +1,9 @@
+<h4>Login</h4>
+<form action="/login" method="post">
+{% csrf_token %}
+    <input placeholder="username" type="text" name="username"><br>
+    <input placeholder="password" type="password" name="password"><br>
+    <input type="submit" value="login"><br>
+</form>
+<hr>
+<h4>Dont have an account? <a href="/register">Registration</a></h4>
