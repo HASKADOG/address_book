@@ -37,7 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "dmo)#3&bte$!jp!k*x4tb9fbs733@pt!$26t@s0r^y0a3mp2n4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://0.0.0.0"]
 ALLOWED_HOSTS = ["0.0.0.0", "django", "127.0.0.1", "address_keeper_d", "localhost"]
 
