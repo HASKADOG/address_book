@@ -6,7 +6,7 @@
 - SQL console logging (in DEBUG mode only)
 
 
-### Set up guid
+### Set up guide
 ```
 git clone git@github.com:HASKADOG/address_keeper.git
 cd address_keeper
