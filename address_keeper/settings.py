@@ -89,28 +89,28 @@ WSGI_APPLICATION = "address_keeper.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 # Deployment
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('POSTGRES_NAME'),
-#         'USER': os.environ.get('POSTGRES_USER'),
-#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-#         'HOST': "postgres",
-#         'PORT': 5432,
-#     }
-# }
-
-# Development
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "address_keeper",
-        "USER": "address_master",
-        "PASSWORD": "changeme_123",
-        "HOST": "localhost",
-        "PORT": 5432,
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': "postgres",
+        'PORT': 5432,
     }
 }
+
+# Development
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "address_keeper",
+#         "USER": "address_master",
+#         "PASSWORD": "changeme_123",
+#         "HOST": "localhost",
+#         "PORT": 5432,
+#     }
+# }
 
 
 # Internationalization
