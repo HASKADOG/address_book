@@ -10,6 +10,8 @@ black = "*"
 sentry-sdk = "*"
 gunicorn = "*"
 psycopg2 = "*"
+dynaconf = "*"
+pytz = "*"
 
 [dev-packages]
 

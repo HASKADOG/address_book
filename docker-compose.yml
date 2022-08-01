@@ -23,6 +23,7 @@ services:
       - POSTGRES_NAME=address_keeper
       - POSTGRES_USER=address_master
       - POSTGRES_PASSWORD=changeme_123
+      - IS_PRODUCTION=True
     ports:
       - "8000:8000"
     links:
