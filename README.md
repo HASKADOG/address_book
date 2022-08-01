@@ -4,13 +4,16 @@
 - Google maps integration
 - Error handling with sentry.io implementation (ramazan.testsafiiulin@yahoo.com:LeeerojJenkins123 / email:password)
 - SQL console logging (in DEBUG mode only)
+- Tests
+- Easy deploy with docker compose
 
 
 ### Setup guide
 ```
 git clone git@github.com:HASKADOG/address_keeper.git
 cd address_keeper
-docker-compose up -d --build
+docker-compose up -d --build (if you use linux)
+docker compose up -d --build (if you use macos)
 ```
 After that you need to process the database migration
 ```
@@ -32,3 +35,5 @@ exit
 Here we go!
 
 Now you have the app running at 0.0.0.0!
+
+P.S.: The `.secrets.toml` should be ignored by git, but I left it for demonstration purposes  

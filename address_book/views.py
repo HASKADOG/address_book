@@ -1,12 +1,14 @@
-import requests
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+import pytz
+from django.conf import settings as s
 from django.contrib.auth import authenticate, login, logout
-from django.http import Http404
-from django.http import HttpResponseForbidden
-from .models import Address
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+from google_maps_integration import GoogleMapsManager
 from .forms import AddAddressForm, LoginForm, DeleteAddressForm, CreateUserForm
+from .models import Address
 
 
 def register(request):
@@ -22,7 +24,7 @@ def register(request):
         if form.is_valid():
             form.save()
 
-            return redirect("/")
+            return redirect("address_book:index")
 
     context = {"form": form}
 
@@ -55,7 +57,7 @@ def login_user(request):
             if user:
                 login(request, user)
 
-                return redirect("/")
+                return redirect("address_book:index")
             else:
                 return redirect(
                     f"/error/User '{username}' does not exist or the password is incorrect"
@@ -70,27 +72,26 @@ def logout_user(request):
     """
     logout(request)
 
-    return redirect("/login")
+    return redirect("address_book:login")
 
 
+@login_required(login_url="address_book:login")
 def index(request):
     """
     The main page
     """
-    if not request.user.is_authenticated:
-        return redirect("/login")
-
     addresses = Address.objects.filter(owner=request.user.id)
 
     context = {
         "addresses": addresses,
         "user": request.user,
-        "api_key": "AIzaSyD2i-XugVBME63U6sMDyRmjfyLAGaVWOcM",
+        "api_key": s.GMAPS_API_KEY,
     }
 
     return render(request, "address_book/index.html", context)
 
 
+@login_required(login_url="address_book:login")
 def add_address(request):
     """
     Address creation form
@@ -101,74 +102,60 @@ def add_address(request):
         form = AddAddressForm(request.POST)
 
         if form.is_valid():
-            params = {
-                "address": form.cleaned_data["address"],
-                "key": "AIzaSyD2i-XugVBME63U6sMDyRmjfyLAGaVWOcM",
-            }
-            gmaps_request = requests.get(
-                "https://maps.googleapis.com/maps/api/geocode/json", params=params
-            ).json()
-
-            if len(gmaps_request["results"]) < 1 or gmaps_request["status"] != "OK":
-                return redirect(
-                    f"/error/Please check if address '{form.cleaned_data['address']}' exists!"
-                )
+            GMaps = GoogleMapsManager(api_key=s.GMAPS_API_KEY)
 
             address = Address(
                 raw_address=form.cleaned_data["address"],
-                address=gmaps_request["results"][0]["formatted_address"],
-                creation_date=datetime.now(),
+                address=GMaps.geocode(form.cleaned_data["address"])["results"][0][
+                    "formatted_address"
+                ],
+                creation_date=datetime.now(tz=pytz.UTC),
                 owner=request.user,
             )
 
             address.save()
 
-            return redirect("/")
+            return redirect("address_book:index")
 
 
+@login_required(login_url="address_book:login")
 def edit_address(request, address_id):
     """
     Address edit forms
     Uses google maps api for address correction
     """
-    address = Address.objects.filter(id=address_id).get()
+
+    try:
+        address = Address.objects.filter(id=address_id).get()
+    except Address.DoesNotExist:
+        return redirect("/error/This address does not exist!")
+
     if address.owner.id != request.user.id:
         return redirect("/error/This address belongs to another user!")
-
-    if not address:
-        return Http404("No addresses with this id!")
 
     if request.method == "POST":
         form = AddAddressForm(request.POST)
 
         if form.is_valid():
-            params = {
-                "address": form.cleaned_data["address"],
-                "key": "AIzaSyD2i-XugVBME63U6sMDyRmjfyLAGaVWOcM",
-            }
-            gmaps_request = requests.get(
-                "https://maps.googleapis.com/maps/api/geocode/json", params=params
-            ).json()
-
-            if len(gmaps_request["results"]) < 1 or gmaps_request["status"] != "OK":
-                return redirect(
-                    f"/error/Please check if address '{form.cleaned_data['address']}' exists!"
-                )
+            GMaps = GoogleMapsManager(api_key=s.GMAPS_API_KEY)
 
             address.raw_address = form.cleaned_data["address"]
-            address.address = gmaps_request["results"][0]["formatted_address"]
-            address.creation_date = datetime.now()
+            address.address = GMaps.geocode(form.cleaned_data["address"])["results"][0][
+                "formatted_address"
+            ]
+            address.creation_date = datetime.now(tz=pytz.UTC)
             address.owner = request.user
 
             address.save()
 
-            return redirect("/")
+            return redirect("address_book:index")
 
     contex = {"address": address}
 
     return render(request, "address_book/edit_address.html", contex)
 
 
+@login_required(login_url="address_book:login")
 def delete_address(request):
     """
     Address delete
@@ -177,11 +164,16 @@ def delete_address(request):
         form = DeleteAddressForm(request.POST)
 
         if form.is_valid():
-            address = Address.objects.filter(id=form.cleaned_data["address_id"]).get()
+            try:
+                address = Address.objects.filter(
+                    id=form.cleaned_data["address_id"]
+                ).get()
+            except Address.DoesNotExist:
+                return redirect("/error/This address does not exist!")
 
             if address.owner.id != request.user.id:
                 return redirect("/error/This address belongs to another user!")
 
             address.delete()
 
-            return redirect("/")
+            return redirect("address_book:index")

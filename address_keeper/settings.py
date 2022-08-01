@@ -11,22 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
-sentry_sdk.init(
-    dsn="https://ef0db688876b46228a0aec573f30694b@o1337398.ingest.sentry.io/6607151",
-    integrations=[
-        DjangoIntegration(),
-    ],
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,12 +19,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "dmo)#3&bte$!jp!k*x4tb9fbs733@pt!$26t@s0r^y0a3mp2n4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+if os.environ.get("IS_PRODUCTION"):
+    DEBUG = False
+
 CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://0.0.0.0"]
-ALLOWED_HOSTS = ["0.0.0.0", "django", "127.0.0.1", "address_keeper_d", "localhost"]
+ALLOWED_HOSTS = [
+    "0.0.0.0",
+    "django",
+    "127.0.0.1",
+    "address_keeper_d",
+    "localhost",
+    "testserver",
+]
 
 
 # Application definition
@@ -89,29 +83,29 @@ WSGI_APPLICATION = "address_keeper.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 # Deployment
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': "postgres",
-        'PORT': 5432,
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "address_keeper",
+        "USER": "address_master",
+        "PASSWORD": "changeme_123",
+        "HOST": "localhost",
+        "PORT": 5432,
     }
 }
 
-# Development
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "address_keeper",
-#         "USER": "address_master",
-#         "PASSWORD": "changeme_123",
-#         "HOST": "localhost",
-#         "PORT": 5432,
-#     }
-# }
-
+if os.environ.get("IS_PRODUCTION"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("POSTGRES_NAME"),
+            "USER": os.environ.get("POSTGRES_USER"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+            "HOST": "postgres",
+            "PORT": 5432,
+        }
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -156,3 +150,29 @@ LOGGING = {
         }
     },
 }
+
+# dynaconf
+import dynaconf
+
+settings = dynaconf.DjangoDynaconf(__name__)
+
+SECRET_KEY = settings.SECRET_KEY
+
+import sentry_sdk
+
+if os.environ.get("IS_PRODUCTION"):
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=settings.SENTRY_LINK,
+        integrations=[
+            DjangoIntegration(),
+        ],
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
