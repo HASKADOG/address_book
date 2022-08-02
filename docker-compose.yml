@@ -4,26 +4,25 @@ services:
     image: postgres
     volumes:
       - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=address_keeper
-      - POSTGRES_USER=address_master
-      - POSTGRES_PASSWORD=changeme_123
+    env_file:
+      - .env
     restart: always
     ports:
       - "5432:5432"
+    command: ["postgres", "-c", "log_statement=all"]
 
   address_keeper_d:
     build:
       context: .
       dockerfile: address_keeper_d/Dockerfile
-    volumes:
-      - .:/code
     restart: always
+    volumes:
+      - /address_book/static:/static
     environment:
-      - POSTGRES_NAME=address_keeper
-      - POSTGRES_USER=address_master
-      - POSTGRES_PASSWORD=changeme_123
       - IS_PRODUCTION=True
+      - DJANGO_STATIC_ROOT="/static"
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     links:
@@ -33,6 +32,8 @@ services:
 
   nginx:
     build: ./nginx
+    volumes:
+      - /address_book/static:/static
     ports:
       - "80:80"
     depends_on:

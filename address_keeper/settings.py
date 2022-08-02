@@ -82,30 +82,16 @@ WSGI_APPLICATION = "address_keeper.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# Deployment
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "address_keeper",
-        "USER": "address_master",
-        "PASSWORD": "changeme_123",
-        "HOST": "localhost",
+        "NAME": os.environ.get("POSTGRES_NAME"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": "postgres",
         "PORT": 5432,
     }
 }
-
-if os.environ.get("IS_PRODUCTION"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("POSTGRES_NAME"),
-            "USER": os.environ.get("POSTGRES_USER"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-            "HOST": "postgres",
-            "PORT": 5432,
-        }
-    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -121,35 +107,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = STATIC_URL
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-LOGGING = {
-    "version": 1,
-    "filters": {
-        "require_debug_true": {
-            "()": "django.utils.log.RequireDebugTrue",
-        }
-    },
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "filters": ["require_debug_true"],
-            "class": "logging.StreamHandler",
-        }
-    },
-    "loggers": {
-        "django.db.backends": {
-            "level": "DEBUG",
-            "handlers": ["console"],
-        }
-    },
-}
 
 # dynaconf
 import dynaconf

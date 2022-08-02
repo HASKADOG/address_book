@@ -1,39 +1,104 @@
-# address_keeper
+# Address keeper
 ### This is a simple CRUD address book application with some features:
 - User authentication
-- Google maps integration
+- Google maps integration.
 - Error handling with sentry.io implementation (ramazan.testsafiiulin@yahoo.com:LeeerojJenkins123 / email:password)
-- SQL console logging (in DEBUG mode only)
+- SQL queries logging. Use `docker-compose logs -f postgres`
 - Tests
 - Easy deploy with docker compose
+- Black formatting
 
+### **Warning!** This app requires google maps api key! Put `GMAPS_API_KEY="<your_key>"` in the `.settings.toml`.
 
-### Setup guide
+### Development setup
+1. Open the directory you this repo to be cloned.
+2. Clone the repo.
+```shell
+$: git clone git@github.com:HASKADOG/address_keeper.git
 ```
-git clone git@github.com:HASKADOG/address_keeper.git
-cd address_keeper
-docker-compose up -d --build (if you use linux)
-docker compose up -d --build (if you use macos)
+3. Open the cloned repo.
+```shell
+$: cd address_keeper
 ```
-After that you need to process the database migration
+4. Initialize and join the virtual environment.
+```shell
+$: pipenv shell
 ```
-docker ps
+5. Install requirements.
+```shell
+$: pipenv install
 ```
-You'll get this output
+6. Set up the postgres credentials and postgres db_name in `docker-compose.yml`.
 ```
-CONTAINER ID   IMAGE                             COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-1454ee557d0a   address_keeper_nginx              "/docker-entrypoint.…"   54 seconds ago   Up 52 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp           address_keeper-nginx-1
-b4f98dcd0749   address_keeper_address_keeper_d   "gunicorn address_ke…"   54 seconds ago   Up 53 seconds   0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   address_keeper-address_keeper_d-1
-a1726cbd3e8e   postgres                          "docker-entrypoint.s…"   2 hours ago      Up 53 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   address_keeper-postgres-1
+postgres:
+image: postgres
+volumes:
+  - ./data/db:/var/lib/postgresql/data
+environment:
+  - POSTGRES_DB=CHANGE_ME
+  - POSTGRES_USER=CHANGE_ME
+  - POSTGRES_PASSWORD=CHANGE_ME
+restart: always
+ports:
+  - "5432:5432"
 ```
-Choose the address_keeper_address_keeper_d container id and 
+7. Run postgres.   
+8.1 Run `$: docker-compose up -d postgres` if you use linux  
+8.2 Run `$: docker compose up -d postgres` if you use macos
+
+9. Create environment variables with database credentials.
+```shell
+$: export POSTGRES_DB=<db>
+$: export POSTGRES_USER=<db_user>
+$: export POSTGRES_PASSWORD=<db_password>
 ```
-docker exec -t -i b4f98dcd0749 bash
-python manage.py migrate
-exit
+10. Run migrations.
+```shell
+$: python manage.py migrate
+``` 
+11. _**Optional. You can register a new user in the app.**_ Create a superuser. You will be able to use this user to log in the app.
+```shell
+python manage.py createsuperuser
+Username: <enter the username>
+Email address: <enter the email>
+Password: <enter the password>
+Password (again): <enter the password again>
 ```
-Here we go!
+12. Start the server.
+```shell
+$: python manage.py runserver
+```
+If you see this:
+```shell
+Django version 4.0.6, using settings 'address_keeper.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+```
+You can access the app at http://127.0.0.1:8000/ !
+
+### Deployment
+1. Open the directory you this repo to be cloned.
+2. Clone the repo.
+```shell
+$: git clone git@github.com:HASKADOG/address_keeper.git
+```
+3. Open the cloned repo.
+```shell
+$: cd address_keeper
+```
+4. Change the db credentials and superuser credentials in `.env`. The default superuser credentials are `superuser:superuser_password`.
+```
+POSTGRES_DB=<db>
+POSTGRES_USER=<db_user>
+POSTGRES_PASSWORD=<db_password>
+DJANGO_SUPERUSER_USERNAME="<su_username>"
+DJANGO_SUPERUSER_EMAIL="<su_email>"
+DJANGO_SUPERUSER_PASSWORD="<su_password>"
+```
+5. Run containers.   
+5.1 Run `$: docker-compose up -d --build` if you use linux  
+5.2 Run `$: docker compose up -d --build` if you use macos
 
 Now you have the app running at 0.0.0.0!
 
-P.S.: The `.secrets.toml` should be ignored by git, but I left it for demonstration purposes  
+P.S.: The `.secrets.toml and .env` should be ignored by git, but I left them for demonstration purposes  
