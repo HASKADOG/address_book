@@ -1,6 +1,21 @@
-<h4>Edit {{ address.raw_address }}</h4>
-<form action="/edit_address/{{ address.id }}" method="post">
-    {% csrf_token %}
-    <input type="text" name="address" value="{{ address.raw_address }}">
-    <input type="submit" value="edit_address">
-</form>
+{% extends 'address_book/main.html' %}
+{%  block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h5>Edit {{ address.raw_address }}</h5>
+            </div>
+        </div>
+        <nav class="navbar bg-light">
+          <div class="container-fluid">
+            <form action="/edit_address/{{ address.id }}" method="post" class="d-flex" role="search">
+                {% csrf_token %}
+                <input class="form-control me-2" type="text" name="address" value="{{ address.raw_address }}">
+                <input class="btn btn-outline-success" type="submit" value="Edit address">
+            </form>
+          </div>
+        </nav>
+    </div>
+
+
+{% endblock %}

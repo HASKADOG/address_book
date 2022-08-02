@@ -1,9 +1,27 @@
-<h4>Login</h4>
-<form action="/login" method="post">
-{% csrf_token %}
-    <input placeholder="username" type="text" name="username"><br>
-    <input placeholder="password" type="password" name="password"><br>
-    <input type="submit" value="login"><br>
-</form>
+{% extends 'address_book/main.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h5>Login</h5>
+            </div>
+        </div>
+        <nav class="navbar bg-light">
+          <div class="container-fluid">
+            <form action="/login" method="post" class="d-flex" role="search">
+                {% csrf_token %}
+                <input class="form-control me-2" placeholder="username" type="text" name="username"><br>
+                <input class="form-control me-2" placeholder="password" type="password" name="password">
+                <input class="btn btn-outline-success" type="submit" value="Login">
+            </form>
+          </div>
+        </nav>
+    </div>
+
 <hr>
-<h4>Dont have an account? <a href="/register">Registration</a></h4>
+<h5>Dont have an account? <a href="/register">Registration</a></h5>
+
+{% endblock %}
+
+

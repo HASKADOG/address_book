@@ -88,7 +88,7 @@ DATABASES = {
         "NAME": os.environ.get("POSTGRES_NAME"),
         "USER": os.environ.get("POSTGRES_USER"),
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": "postgres",
+        "HOST": "postgres" if os.environ.get("IS_PRODUCTION") else "localhost",
         "PORT": 5432,
     }
 }
