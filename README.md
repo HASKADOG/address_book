@@ -74,7 +74,7 @@ $: git clone git@github.com:HASKADOG/address_keeper.git
 ```
 3. Open the cloned repo.
 ```shell
-$: cd address_keeper
+$: cd address_book
 ```
 4. Change the db credentials and superuser credentials in `.env`. _**The default superuser credentials are `superuser:superuser_password`. You can use them to log in the app**_.
 ```
