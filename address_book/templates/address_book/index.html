@@ -33,7 +33,7 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col">
-                                    <a type="button" class="btn btn-primary" href="/edit_address/{{ address.id }}">edit address</a>
+                                    <a type="button" class="btn btn-primary" href="/edit_address/{{ address.id }}">Edit address</a>
                                     <form class="delete_form" action="/delete_address" method="post">
                                         {% csrf_token %}
                                         <input style="display: none;" type="number" name="address_id" value="{{ address.id }}">

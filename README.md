@@ -8,7 +8,7 @@
 - Easy deploy with docker compose
 - Code formatting using [black](https://pypi.org/project/black/).
 
-### **Warning!** This app requires google maps api key! Put `GMAPS_API_KEY="<your_key>"` in the `.settings.toml`.
+### **Warning!** This app requires google maps api key! Put `GMAPS_API_KEY="<your_key>"` in the `.settings.toml`*.
 
 ### Development setup
 1. Open the directory you this repo to be cloned.
@@ -28,7 +28,7 @@ $: pipenv shell
 ```shell
 $: pipenv install
 ```
-6. **_Optional. If you want to use _** Set up the postgres credentials and postgres db_name in `.env`.
+6. Set up the postgres credentials and postgres db_name in `.env`.
 ```
 POSTGRES_DB=<db>
 POSTGRES_USER=<db_user>
@@ -76,7 +76,7 @@ $: git clone git@github.com:HASKADOG/address_keeper.git
 ```shell
 $: cd address_keeper
 ```
-4. Change the db credentials and superuser credentials in `.env`. _**The default superuser credentials are `superuser:superuser_password`**_.
+4. Change the db credentials and superuser credentials in `.env`. _**The default superuser credentials are `superuser:superuser_password`. You can use them to log in the app**_.
 ```
 POSTGRES_DB=<db>
 POSTGRES_USER=<db_user>
@@ -89,6 +89,6 @@ DJANGO_SUPERUSER_PASSWORD="<su_password>"
 5.1 Run `$: docker-compose up -d --build` if you use linux.  
 5.2 Run `$: docker compose up -d --build` if you use macos.
 
-Now you have the app running at 0.0.0.0!
+Now you have the app running at http://0.0.0.0 !
 
-P.S.: The `.secrets.toml and .env` should be ignored by git, but I left them for demonstration purposes  
+*P.S.: The `.secrets.toml and .env` should be ignored by git, but I left them for demonstration purposes  
