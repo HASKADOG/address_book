@@ -18,15 +18,15 @@ $: git clone git@github.com:HASKADOG/address_keeper.git
 ```
 3. Open the cloned repo.
 ```shell
-$: cd address_keeper
+$: cd address_book
 ```
-4. Initialize and join the virtual environment.
-```shell
-$: pipenv shell
-```
-5. Install requirements.
+4. Install requirements.
 ```shell
 $: pipenv install
+```
+5. Join the virtual environment.
+```shell
+$: pipenv shell
 ```
 6. Set up the postgres credentials and postgres db_name in `.env`.
 ```
