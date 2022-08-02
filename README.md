@@ -11,7 +11,7 @@
 ### **Warning!** This app requires google maps api key! Put `GMAPS_API_KEY="<your_key>"` in the `.settings.toml`*.
 
 ### Development setup
-1. Open the directory you this repo to be cloned.
+1. Open the directory you want this repo to be cloned.
 2. Clone the repo.
 ```shell
 $: git clone git@github.com:HASKADOG/address_keeper.git
@@ -67,7 +67,7 @@ Quit the server with CONTROL-C.
 You can access the app at http://127.0.0.1:8000/ !
 
 ### Deployment
-1. Open the directory you this repo to be cloned.
+1. Open the directory you want this repo to be cloned.
 2. Clone the repo.
 ```shell
 $: git clone git@github.com:HASKADOG/address_keeper.git
