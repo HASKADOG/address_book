@@ -91,4 +91,4 @@ DJANGO_SUPERUSER_PASSWORD="<su_password>"
 
 Now you have the app running at http://0.0.0.0 !
 
-*P.S.: The `.secrets.toml and .env` should be ignored by git, but I left them for demonstration purposes  
+*P.S.: The `..env` should be ignored by git, but I left it for demonstration purposes  
